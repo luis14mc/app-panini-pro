@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MUNDIAL 2026 - Swap List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary": "#2f3131",
+                "surface-container": "#1f1f1f",
+                "on-secondary-fixed-variant": "#534600",
+                "on-tertiary-fixed": "#291800",
+                "on-secondary-fixed": "#221b00",
+                "primary": "#ffffff",
+                "on-primary-fixed-variant": "#454747",
+                "surface": "#131313",
+                "on-error": "#690005",
+                "inverse-on-surface": "#303030",
+                "on-tertiary": "#422c07",
+                "secondary-container": "#a79013",
+                "surface-container-lowest": "#0e0e0e",
+                "on-primary-container": "#636565",
+                "on-background": "#e2e2e2",
+                "tertiary-fixed-dim": "#e5c18f",
+                "on-tertiary-fixed-variant": "#5b421c",
+                "surface-tint": "#c6c6c7",
+                "tertiary": "#ffffff",
+                "outline": "#8e9192",
+                "inverse-primary": "#5d5f5f",
+                "surface-container-low": "#1b1b1b",
+                "surface-container-highest": "#353535",
+                "secondary-fixed-dim": "#e1c64a",
+                "background": "#000000",
+                "on-secondary": "#3a3000",
+                "tertiary-container": "#ffddb1",
+                "primary-fixed-dim": "#c6c6c7",
+                "on-tertiary-container": "#7c5f36",
+                "on-surface": "#e2e2e2",
+                "error": "#ffb4ab",
+                "on-error-container": "#ffdad6",
+                "outline-variant": "#444748",
+                "tertiary-fixed": "#ffddb1",
+                "surface-dim": "#131313",
+                "primary-fixed": "#e2e2e2",
+                "primary-container": "#e2e2e2",
+                "secondary": "#e1c64a",
+                "on-surface-variant": "#c4c7c8",
+                "surface-variant": "#353535",
+                "on-secondary-container": "#322900",
+                "surface-bright": "#393939",
+                "inverse-surface": "#e2e2e2",
+                "error-container": "#93000a",
+                "surface-container-high": "#2a2a2a",
+                "on-primary-fixed": "#1a1c1c",
+                "secondary-fixed": "#fee263"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "unit": "8px",
+                "margin-mobile": "20px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "container-max": "1440px",
+                "stack-sm": "4px",
+                "stack-md": "12px",
+                "stack-lg": "24px",
+                "container-margin": "20px"
+        },
+        "fontFamily": {
+                "headline-md": ["Sora"],
+                "headline-sm": ["Sora"],
+                "headline-lg": ["Sora"],
+                "label-sm": ["Sora"],
+                "body-md": ["Sora"],
+                "headline-lg-mobile": ["Sora"],
+                "body-lg": ["Sora"],
+                "label-lg": ["Sora"],
+                "display-26": ["Sora"]
+        },
+        "fontSize": {
+                "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "headline-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "display-26": ["120px", {"lineHeight": "110px", "letterSpacing": "-0.04em", "fontWeight": "800"}]
+        }
+      },
+    },
+  }
+</script>
+<style>
+    body {
+      background-color: #000000;
+      color: #e2e2e2;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .neon-border {
+      position: relative;
+    }
+    .neon-border::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      padding: 1.5px;
+      border-radius: inherit;
+      background: linear-gradient(to bottom right, #e1c64a, #ffffff);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.3;
+    }
+    .glow-gold {
+      box-shadow: 0 0 15px rgba(225, 198, 74, 0.3);
+    }
+    .glass-nav {
+      background: rgba(13, 13, 13, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .circuit-bg {
+      background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+  </style>
+<style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen font-body-md overflow-x-hidden circuit-bg">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-container-margin h-16 border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<h1 class="font-headline-md text-headline-sm font-bold tracking-tighter text-primary">MUNDIAL 2026</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity active:scale-90 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+</button>
+<button class="hover:opacity-80 transition-opacity active:scale-90 duration-150">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-container-margin pt-stack-lg pb-32">
+<!-- Header Section -->
+<div class="mb-stack-lg">
+<h2 class="font-headline-lg-mobile text-on-surface mb-stack-sm">Swap List</h2>
+<p class="font-body-md text-on-surface-variant">Manage your 24 active duplicates for trading.</p>
+</div>
+<!-- Summary Card (Bento Style) -->
+<div class="grid grid-cols-2 gap-stack-md mb-stack-lg">
+<div class="bg-surface-container-low p-stack-md rounded-xl border border-outline-variant/30 flex flex-col gap-1">
+<span class="font-label-sm text-on-surface-variant uppercase">Total Duplicates</span>
+<span class="font-headline-md text-secondary">42</span>
+</div>
+<div class="bg-surface-container-low p-stack-md rounded-xl border border-outline-variant/30 flex flex-col gap-1">
+<span class="font-label-sm text-on-surface-variant uppercase">Unique Stickers</span>
+<span class="font-headline-md text-on-surface">18</span>
+</div>
+</div>
+<!-- Scrollable List Area -->
+<div class="flex flex-col gap-stack-md">
+<!-- List Item 1 -->
+<div class="neon-border bg-surface-container-highest p-4 rounded-xl flex items-center justify-between group transition-all duration-300">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden border border-outline-variant/20 flex items-center justify-center">
+<img alt="USA Flag" class="w-10 h-6 object-cover rounded-sm" data-alt="A macro shot of a glossy collectible sticker featuring the United States flag, reflecting vibrant stadium lights with a textured paper grain. The aesthetic is clean and high-contrast, fitting a modern sports memorabilia theme with deep blacks and sharp edges." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5uahi-eERlDuH_i2epIqEgXMYyiZVFTv463oUlNJcnrtPcgPslvrY8AfWMq4tdpKd-9Ntey85mskC-TDRlaT3PLezxmTm_tqlY2i6jHD5LJnNQeAuyyeXEuaMWUReasc4lp5lMlwQvyFiqEfKBDKZsUXJ_iuEachA67aAsYMC8VULev3O3yBsY7HXHEvB_S9J1MSrDTen77FQMJmmR00pwIfFZ3yrippzvbWuW9WYaZ0sSC4Q3c-cr47vTLQ3dusu5N8z-5iYSA"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-on-surface text-lg">USA 07</span>
+<span class="font-label-sm text-on-surface-variant">Christian Pulisic</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 bg-secondary/10 text-secondary border border-secondary/30 rounded-full font-bold text-label-md glow-gold">+3</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40 group-hover:opacity-100 transition-opacity">more_vert</span>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="bg-surface-container-high p-4 rounded-xl flex items-center justify-between border border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden border border-outline-variant/20 flex items-center justify-center">
+<img alt="Mexico Flag" class="w-10 h-6 object-cover rounded-sm" data-alt="A high-quality close up image of a Mexican national football team flag on a sticker, designed with a premium holographic finish that shimmers under neon lights. The background is a dark, sophisticated tech-inspired texture, emphasizing a luxury sports app aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdFDNwyS1anjR_Ol4nZfC3Bk96zA75VNVOwNtt4-3RUJuoqaT3XVshQc6mSDg4cl35B-ygzlI7EAh_cjocf9d43KUJVkfnigH0uCbZ_DdAYVQtWjOYletCGy1bQyYqlymy1zjUXMhvjI9kxu-jdlwPHFq_pG5zWLqkYm3mbenkUs_2ZvQi0hL0Rp74kmRU9kP8Vsfp14Yd3L0r99rrfx2RNbhyxjD7AsT8FcIaYUxyaPtNFba0M8u6ZQF_MtvspiTQmZbSZuLjVg"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-on-surface text-lg">MEX 14</span>
+<span class="font-label-sm text-on-surface-variant">Santiago Giménez</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 bg-secondary/10 text-secondary border border-secondary/30 rounded-full font-bold text-label-md glow-gold">+1</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40">more_vert</span>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="bg-surface-container-high p-4 rounded-xl flex items-center justify-between border border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden border border-outline-variant/20 flex items-center justify-center">
+<img alt="Canada Flag" class="w-10 h-6 object-cover rounded-sm" data-alt="A stylized collectible sticker of the Canada national flag, featuring a maple leaf with a digital, futuristic glow around its edges. The image is set against a true black background to make the vibrant red and white of the flag pop, evoking a high-octane sporting event vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvDNOfOyBOzwxHX6cCr5WhKj--t7DgxnhvauJ8m820bhKYSAERSeTql5vbW-iBWWDM944zskFFlDZYt9llARsq0R1XzYX2CiLwP6c_M_3f8qaB4hUmMxhlWQuKB6GrYBn6XqH4Gfr-_0GEPyVE3PkbF5Ck-QoU_P7PnnYfJ7DUhXfNA6aHZQk-wLY-7BW6YO_kv6NxEW-AoDzHy5sb6a6B-AV0pZvq8lBXpYBZiioB81tm26FW0uleSkVtoqAwi8-4vXw0hrDMfA"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-on-surface text-lg">CAN 19</span>
+<span class="font-label-sm text-on-surface-variant">Alphonso Davies</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 bg-secondary/10 text-secondary border border-secondary/30 rounded-full font-bold text-label-md glow-gold">+2</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40">more_vert</span>
+</div>
+</div>
+<!-- List Item 4 -->
+<div class="bg-surface-container-high p-4 rounded-xl flex items-center justify-between border border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden border border-outline-variant/20 flex items-center justify-center">
+<img alt="Brazil Flag" class="w-10 h-6 object-cover rounded-sm" data-alt="A sleek, digital representation of a Brazil team sticker, showcasing the yellow and green flag colors with a subtle radial glow effect. The style is modern-vibrant, suggesting a high-tech sports tracker environment with sharp typography and cinematic depth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXf-HstxkGa054dTl4prmPbWpGGap0kMa61lSwgLTmtvNB68Sp2t5BBDiLJY98DZdaClF434T4S1R4_OVo845KAs7sVzr8peg2n5fKldH-vA8xhEZeaIHFJ1WcZlXu7-etCMj0NV9DEXfssD9X4adSw1TAPBWV4EhrftKNhz9CxXvWOqNBYwLhux6KfP0rvGjt30oU8cqh7pfwvW0zf5IXqqG0B6m-Fc5v6KVvIKoQKy2BacBDz_GuslQfghEvVqI8eBO87qYryQ"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-on-surface text-lg">BRA 10</span>
+<span class="font-label-sm text-on-surface-variant">Vinícius Jr.</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 bg-secondary/10 text-secondary border border-secondary/30 rounded-full font-bold text-label-md glow-gold">+5</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40">more_vert</span>
+</div>
+</div>
+<!-- List Item 5 -->
+<div class="bg-surface-container-high p-4 rounded-xl flex items-center justify-between border border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden border border-outline-variant/20 flex items-center justify-center">
+<img alt="Argentina Flag" class="w-10 h-6 object-cover rounded-sm" data-alt="A professional sports collectible sticker of the Argentina national flag, featuring the sun emblem in sharp detail with a metallic sheen. The lighting is low-key, highlighting the sticker's edges with a cyan neon tint, reflecting the festive energy of a world cup host nation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvV3A_oBdIqhgTjQ3JXyOD4c4uhoC8rFgVZElSg6TuffSRfTgJfci-UCOUJHvNKEpObUP6uXKEa6aGn1Lab3zsE6P9hzZ88h7ZqTIfASyeWCqCxygVMCvAB6ndnSBAM8eiJDIZ-prrQP0HwvCIco5E0L6KufHjdpLGGLYqCZfXnfJEabQK9eiZc5rGB3_lrdaTCtVoAVvN4XRdTn2eh__JkABbuIFpQKG5mN6fRQp6tSMo8v3fs3I4oHvxNFTCf0BpkbbHDHbxIw"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-on-surface text-lg">ARG 10</span>
+<span class="font-label-sm text-on-surface-variant">Lionel Messi</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 bg-secondary/10 text-secondary border border-secondary/30 rounded-full font-bold text-label-md glow-gold">+1</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40">more_vert</span>
+</div>
+</div>
+</div>
+<!-- Empty/End Spacer for smooth scroll -->
+<div class="h-12"></div>
+</main>
+<!-- Sticky Action Button -->
+<div class="fixed bottom-24 right-container-margin z-40">
+<button class="bg-secondary text-on-secondary-container px-6 py-4 rounded-full font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(225,198,74,0.4)] active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined">share</span>
+<span class="font-label-md">Share List</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 glass-nav flex justify-around items-center px-4 py-3 pb-safe border-t border-outline-variant/20">
+<!-- Dashboard -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary hover:opacity-90 transition-all duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</button>
+<!-- Album -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary hover:opacity-90 transition-all duration-200">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-sm text-label-sm">Album</span>
+</button>
+<!-- Swap List (ACTIVE) -->
+<button class="flex flex-col items-center justify-center text-secondary font-bold relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-secondary after:rounded-full after:shadow-[0_0_8px_#e1c64a]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+<span class="font-label-sm text-label-sm">Swap List</span>
+</button>
+</nav>
+<script>
+    // Interaction Logic
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('touchstart', () => {
+        btn.classList.add('scale-95');
+      });
+      btn.addEventListener('touchend', () => {
+        btn.classList.remove('scale-95');
+      });
+    });
+
+    // Share action feedback
+    const shareBtn = document.querySelector('.bg-secondary');
+    shareBtn.addEventListener('click', () => {
+      const originalContent = shareBtn.innerHTML;
+      shareBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span><span class="font-label-md">Copied!</span>';
+      setTimeout(() => {
+        shareBtn.innerHTML = originalContent;
+      }, 2000);
+    });
+  </script>
+</body></html>

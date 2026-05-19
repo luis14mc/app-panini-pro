@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Hanken+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-primary": "#2f3131",
+                "surface-container": "#1f1f1f",
+                "on-secondary-fixed-variant": "#534600",
+                "on-tertiary-fixed": "#291800",
+                "on-secondary-fixed": "#221b00",
+                "primary": "#ffffff",
+                "on-primary-fixed-variant": "#454747",
+                "surface": "#131313",
+                "on-error": "#690005",
+                "inverse-on-surface": "#303030",
+                "on-tertiary": "#422c07",
+                "secondary-container": "#a79013",
+                "surface-container-lowest": "#0e0e0e",
+                "on-primary-container": "#636565",
+                "on-background": "#e2e2e2",
+                "tertiary-fixed-dim": "#e5c18f",
+                "on-tertiary-fixed-variant": "#5b421c",
+                "surface-tint": "#c6c6c7",
+                "tertiary": "#ffffff",
+                "outline": "#8e9192",
+                "inverse-primary": "#5d5f5f",
+                "surface-container-low": "#1b1b1b",
+                "surface-container-highest": "#353535",
+                "secondary-fixed-dim": "#e1c64a",
+                "background": "#000000",
+                "on-secondary": "#3a3000",
+                "tertiary-container": "#ffddb1",
+                "primary-fixed-dim": "#c6c6c7",
+                "on-tertiary-container": "#7c5f36",
+                "on-surface": "#ffffff",
+                "error": "#ffb4ab",
+                "on-error-container": "#ffdad6",
+                "outline-variant": "#444748",
+                "tertiary-fixed": "#ffddb1",
+                "surface-dim": "#131313",
+                "primary-fixed": "#e2e2e2",
+                "primary-container": "#e2e2e2",
+                "secondary": "#e1c64a",
+                "on-surface-variant": "#c4c7c8",
+                "surface-variant": "#353535",
+                "on-secondary-container": "#322900",
+                "surface-bright": "#393939",
+                "inverse-surface": "#e2e2e2",
+                "error-container": "#93000a",
+                "surface-container-high": "#2a2a2a",
+                "on-primary-fixed": "#1a1c1c",
+                "secondary-fixed": "#fee263"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "unit": "8px",
+                "margin-mobile": "20px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "container-max": "1440px",
+                "stack-sm": "4px",
+                "stack-md": "12px",
+                "stack-lg": "24px",
+                "container-margin": "20px"
+            },
+            "fontFamily": {
+                "headline-md": ["Sora"],
+                "headline-sm": ["Sora"],
+                "headline-lg": ["Sora"],
+                "label-sm": ["Sora"],
+                "body-md": ["Sora"],
+                "headline-lg-mobile": ["Sora"],
+                "body-lg": ["Sora"],
+                "label-lg": ["Sora"],
+                "display-26": ["Sora"]
+            },
+            "fontSize": {
+                "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "headline-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "display-26": ["120px", {"lineHeight": "110px", "letterSpacing": "-0.04em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(225, 198, 74, 0.4);
+        }
+
+        .sticker-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sticker-card:active {
+            transform: scale(0.96);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="font-body-md">
+<!-- Top AppBar -->
+<header class="bg-black fixed top-0 w-full z-50 flex justify-between items-center px-container-margin h-16 border-b border-surface-container-highest">
+<div class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-secondary">sports_soccer</span>
+<h1 class="font-headline-md text-2xl font-bold tracking-tighter text-white">MUNDIAL 2026</h1>
+</div>
+<div class="scale-95 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined text-white">account_circle</span>
+</div>
+</header>
+<main class="pt-20 pb-24 min-h-screen px-container-margin">
+<!-- Team Selector (Horizontal Scroll) -->
+<section class="mb-stack-lg">
+<h2 class="text-xs mb-stack-sm text-on-surface-variant tracking-widest uppercase font-bold">Select Nation</h2>
+<div class="flex overflow-x-auto gap-stack-md py-stack-sm no-scrollbar">
+<!-- USA -->
+<button class="flex-none flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full p-0.5 bg-black border-2 border-secondary gold-glow">
+<img alt="USA" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhRPrusrdZwzz3qHrHRNCb46wSO8rf3cQA_BCAP1pDugjgZrN0zCVs98SLIJzoSL4UkD0hrFTzQZ4hIesiO9rPbbJ1atka3amGQ1QGmJF0ITeVlq81_lVlA_ZGuwOUqFC5gTKDEpb0unpb-3A-aFMNRuSUNmCUdQH_8_9iNTYfmW-TJVqFlzIs_581CW6HIN-0JVtZA8aUoL7Fxd3psUG28SVaxOE6G3c8DZq9mwfZ_ADX7Zu_ASVS9jcZdHN_xSMGGeghtvgQBQ"/>
+</div>
+<span class="text-xs text-secondary font-bold">USA</span>
+</button>
+<!-- MEX -->
+<button class="flex-none flex flex-col items-center gap-2 opacity-50">
+<div class="w-16 h-16 rounded-full p-0.5 border border-surface-container-highest">
+<img alt="MEX" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhu7dh3PV-qUN3sFnkpwdUOkpsTXhVPIln09m3VUohG1xHQgO4uZpV9JNhDDh3COh5QNxx_Z_QAOsgQPiPjFIji0gwMHeVQbSVkDincwgLs3a0vzcwy30KfK94WPz8ZOTgwQQbupGRoQSBpHOQadNaCDNdNqSFrtAN9AFnTn1-EZ4ERvcd58NKDRsdA0vWTKM9xOmxHwiwl1DbiJYnQ3zBJ35F9UvSyBIvRrJex1iu-8UagrJNqwyRbY6oRP6PBT6xfEgnIMRTKA"/>
+</div>
+<span class="text-xs">MEX</span>
+</button>
+<!-- CAN -->
+<button class="flex-none flex flex-col items-center gap-2 opacity-50">
+<div class="w-16 h-16 rounded-full p-0.5 border border-surface-container-highest">
+<img alt="CAN" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxydFbxH1_VpLErurACzkx_gqzLVXFlmfiT8TyUYrn9AKhCezPI2H5ANVr83uUc3bp1E6jmaMlTIUEIro35FJcB1ii_XREBxhnRw7qMgvjtr8T21gk8pPud6_BaKAsJzG6hG0X_RpRSnA7rPfdbtNiG4YHeW33oejRAbZbsIToc7iG18_vSaJjPrCiHiLjUI1QXJ8awO_0Z4H1gcr4do8cGeINKWLFhKealbXJk3YL8Ylj9PirXX72Ze1KX1dCwYyW3HiZmo6euQ"/>
+</div>
+<span class="text-xs">CAN</span>
+</button>
+<!-- ARG -->
+<button class="flex-none flex flex-col items-center gap-2 opacity-50">
+<div class="w-16 h-16 rounded-full p-0.5 border border-surface-container-highest">
+<img alt="ARG" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB64Ds9fmYKsUwqMAAQV_sG46yk_RW3cj9Vq_zo_P2Sw4cuY2kPRQOkGdoxECR0lkHp1uVkZVmETzO6nyBEbuhvgcab0Jot79v6fuaaJSrkjnuFh4mBaDeheeQfqiDx3KenybyqK2UsvlGTmFgQ7W-mo3uC__LxDEDPBmGjFRe9f_i6D8VL9NfOmMfyMPBACEwHhuiuBenbm10HVG1u365aDOGQNcblUkEYiZu-yKKMuN-tZNVfvl2g3ucu6_7UBvahgT6QMzF5-w"/>
+</div>
+<span class="text-xs">ARG</span>
+</button>
+</div>
+</section>
+<!-- Stats Overview -->
+<section class="mb-stack-lg p-stack-md rounded-xl bg-surface-container border border-surface-container-highest flex justify-between items-center">
+<div>
+<p class="text-xs text-on-surface-variant font-bold uppercase tracking-tight">Team USA Collection</p>
+<p class="text-2xl font-bold text-secondary">14 / 20 <span class="text-sm text-on-surface-variant font-normal">Pasted</span></p>
+</div>
+<div class="w-20 h-20 relative">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="stroke-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="stroke-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="70, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-bold text-xs text-white">70%</div>
+</div>
+</section>
+<!-- Sticker Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Sticker 1 (Pasted - Gold Accent) -->
+<div class="sticker-card relative aspect-[3/4] bg-surface-container rounded-xl border-2 border-secondary gold-glow overflow-hidden flex flex-col">
+<div class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-secondary text-black font-bold text-[10px]">USA 01</div>
+<img class="w-full h-3/5 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUSzI4lnALemyvmWhJ0rQ7S2r8q0y_k8uLWZ9Lx8NM8mko_db-Svr00w1Z0-mcyoQerRjLhCKqVtXhmSYQp4O2uvEufSKwuwsW5lqFFU6V4-UpXW7G75TdS4zrBidEevq-JpxtMzF7E4rCzeDtx-mi7Z2UeHwFG2t_6C8z8p64H3VUo9v7gauWmBuclGLjH4hcZQyF_HTDApBd-5vZhk4hhJc50QMKHqg7bK5r7LKX0qdbFI6AEjN53VnqBmCJwDteBJCP2beJWg"/>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<p class="text-sm font-bold text-white truncate">C. Pulisic</p>
+<div class="flex items-center justify-between">
+<button class="w-8 h-8 rounded-full bg-black border border-surface-container-highest flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-white text-sm">remove</span>
+</button>
+<span class="text-sm font-bold text-secondary">0</span>
+<button class="w-8 h-8 rounded-full bg-secondary text-black flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Sticker 2 (Pasted - Gold Accent) -->
+<div class="sticker-card relative aspect-[3/4] bg-surface-container rounded-xl border-2 border-secondary gold-glow overflow-hidden flex flex-col">
+<div class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-secondary text-black font-bold text-[10px]">USA 02</div>
+<img class="w-full h-3/5 object-cover grayscale brightness-75" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ-5I5VJ3DP1dpueoPmgjLjFsGhOmsgXjNzjTChlQcUsyEN96U3d6pSHvYrjiUOcjuN5nSi4_TJJJODNwkmS1igOIrmdbawTlsfs6y-_w8C7UBwy9xV02w-lP8SaifVHjzmYzPWZR75bwaB_L-o9dV4Fi5wbjIl1olzb9Bs_b1ufRuPbBz-qoGJclmbJL1WCHmSmWGnCfgZ_5PrKFJFbk1EkQI84cJ60qSck55ScTJqDSLAH1gqepG62Qh748h05uPBk_AZxFZKQ"/>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<p class="text-sm font-bold text-white truncate">M. Turner</p>
+<div class="flex items-center justify-between">
+<button class="w-8 h-8 rounded-full bg-black border border-surface-container-highest flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-white text-sm">remove</span>
+</button>
+<span class="text-sm font-bold text-secondary">+2</span>
+<button class="w-8 h-8 rounded-full bg-secondary text-black flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Sticker 3 (Missing) -->
+<div class="sticker-card relative aspect-[3/4] bg-black rounded-xl border border-surface-container-highest border-dashed overflow-hidden flex flex-col opacity-60">
+<div class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-bold text-[10px]">USA 03</div>
+<div class="w-full h-3/5 flex items-center justify-center bg-surface-container">
+<span class="material-symbols-outlined text-4xl text-outline-variant">contactless_off</span>
+</div>
+<div class="flex-1 p-2 flex flex-col justify-center items-center gap-2">
+<p class="text-xs text-on-surface-variant">Missing</p>
+<button class="px-4 py-1 rounded-full bg-surface-container-highest text-white text-xs font-bold">Swap</button>
+</div>
+</div>
+<!-- Sticker 4 (Pasted - Gold Accent) -->
+<div class="sticker-card relative aspect-[3/4] bg-surface-container rounded-xl border-2 border-secondary gold-glow overflow-hidden flex flex-col">
+<div class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-secondary text-black font-bold text-[10px]">USA 04</div>
+<img class="w-full h-3/5 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARk8dEDIdxe0rz3rsW7gbJDyQxD1sMOK3vSvrmMebJCqMYG6dFvQ3jWvqI3qVEsaB03Mrgo2A3s2d3_RNIbZqgtTaxz2Mijt2uqD7WE0GhJTuraAa9xboalrDxeef9NQLokYJs2mr4NsTqSFBDo237eBObZaCnhwvruxsWzawq5XiVadVFbkNz3Uee6Svocqydq_bpm8Khqxbf3eJlc986NRZ2CCpItJ0_9AonN2yi3pGc8vTGr38NNXXvbew7sWaUIOXcG7Qu4g"/>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<p class="text-sm font-bold text-white truncate">T. Weah</p>
+<div class="flex items-center justify-between">
+<button class="w-8 h-8 rounded-full bg-black border border-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm">remove</span>
+</button>
+<span class="text-sm font-bold text-secondary">0</span>
+<button class="w-8 h-8 rounded-full bg-secondary text-black flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Sticker 5 (Pasted - Gold Accent) -->
+<div class="sticker-card relative aspect-[3/4] bg-surface-container rounded-xl border-2 border-secondary gold-glow overflow-hidden flex flex-col">
+<div class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-secondary text-black font-bold text-[10px]">USA 05</div>
+<img class="w-full h-3/5 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC66lXSWCvZtNU7apKJs39LCUsF7D9lx9ghb8WgHNp3XRfMjSN7IyxfgJanDsA7L3fwG8ctF90cmzcUkiKVGiPbmzW_FFgonPX8X9l_EzHj6cmkfOG27u_2R5JTGy23pH23rC40PoejWmbmgreE6PY_oHEtw2St86DA_FpUahx9-a1-5yHGy3V7moYd_E36PVIx93bjZId_LgM-of6QnG0BvX7JrsnAqUjZn_oW0YZIMw-7x3TcBBtSYhNRrUtYWTPqpbOvA1yUMg"/>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<p class="text-sm font-bold text-white truncate">W. McKennie</p>
+<div class="flex items-center justify-between">
+<button class="w-8 h-8 rounded-full bg-black border border-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm">remove</span>
+</button>
+<span class="text-sm font-bold text-secondary">+1</span>
+<button class="w-8 h-8 rounded-full bg-secondary text-black flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Sticker 6 (Missing) -->
+<div class="sticker-card relative aspect-[3/4] bg-black rounded-xl border border-surface-container-highest border-dashed overflow-hidden flex flex-col opacity-60">
+<div class="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-bold text-[10px]">USA 06</div>
+<div class="w-full h-3/5 flex items-center justify-center bg-surface-container">
+<span class="material-symbols-outlined text-4xl text-outline-variant">person_off</span>
+</div>
+<div class="flex-1 p-2 flex flex-col justify-center items-center gap-2">
+<p class="text-xs text-on-surface-variant">Missing</p>
+<button class="px-4 py-1 rounded-full bg-surface-container-highest text-white text-xs font-bold">Swap</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-black/80 backdrop-blur-xl border-t border-surface-container-highest shadow-[0_-4px_12px_rgba(225,198,74,0.1)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-secondary after:rounded-full after:shadow-[0_0_8px_#e1c64a] scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span class="text-[10px]">Album</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="text-[10px] font-bold">Swap List</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.classList.add('scale-90');
+            });
+            btn.addEventListener('touchend', () => {
+                btn.classList.remove('scale-90');
+            });
+        });
+
+        // Simple animation for the progress bar on load
+        window.onload = () => {
+            const path = document.querySelector('path.stroke-secondary');
+            if(path) {
+                path.style.strokeDasharray = '0, 100';
+                setTimeout(() => {
+                    path.style.transition = 'stroke-dasharray 1.5s ease-out';
+                    path.style.strokeDasharray = '70, 100';
+                }, 300);
+            }
+        };
+    </script>
+</body></html>
