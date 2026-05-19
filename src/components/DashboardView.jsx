@@ -1,6 +1,7 @@
 import { useGame } from '../context/GameContext';
 import { countTournamentProgress } from '../data/tournament';
 import { mundialLogo } from '../data/countryImages';
+import InstallHint from './InstallHint';
 
 function StatCard({ label, value, accent, onClick }) {
   const Tag = onClick ? 'button' : 'div';
@@ -26,6 +27,7 @@ export default function DashboardView({ onNavigate }) {
 
   return (
     <div className="animate-fade-in space-y-6">
+      <InstallHint />
       <section className="relative overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-container-low p-5">
         <div className="relative z-10 space-y-3">
           <p className="text-xs font-bold uppercase tracking-[0.15em] text-secondary">Panini · FIFA WC 2026</p>
