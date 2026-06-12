@@ -16,6 +16,33 @@ export function formatSwapListText(duplicates, totalSwapAvailable) {
   ].join('\n');
 }
 
+export function formatMissingListText(missing, totalPlayers) {
+  if (!missing.length) {
+    return '¡Álbum completo! No me faltan cromos del Panini Mundial 2026.';
+  }
+
+  const byCountry = missing.reduce((acc, sticker) => {
+    if (!acc[sticker.country]) acc[sticker.country] = [];
+    acc[sticker.country].push(sticker);
+    return acc;
+  }, {});
+
+  const sections = Object.entries(byCountry)
+    .sort(([a], [b]) => a.localeCompare(b, 'es'))
+    .flatMap(([country, stickers]) => [
+      `— ${country} —`,
+      ...stickers.map((s) => `• ${s.code} — ${s.name}`),
+      '',
+    ]);
+
+  return [
+    '📋 FALTANTES — Panini Mundial 2026',
+    '',
+    ...sections,
+    `Total: ${missing.length} faltantes · ${totalPlayers} cromos en el álbum`,
+  ].join('\n');
+}
+
 export function getWhatsAppShareUrl(text) {
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
@@ -38,10 +65,10 @@ export async function copyTextToClipboard(text) {
   return ok;
 }
 
-export async function shareSwapList(text) {
+export async function shareListText(text, title = 'Panini Mundial 2026') {
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'Repetidas Panini 2026', text });
+      await navigator.share({ title, text });
       return 'shared';
     } catch (err) {
       if (err?.name === 'AbortError') return 'cancelled';
@@ -49,3 +76,6 @@ export async function shareSwapList(text) {
   }
   return null;
 }
+
+/** @deprecated use shareListText */
+export const shareSwapList = shareListText;

@@ -1,15 +1,23 @@
 import { useMemo, useState, useCallback } from 'react';
 import { useGame } from '../context/GameContext';
+import { playersData } from '../data/players';
 import { getCountryImage } from '../data/countryImages';
 import {
   formatSwapListText,
+  formatMissingListText,
   getWhatsAppShareUrl,
   copyTextToClipboard,
-  shareSwapList,
+  shareListText,
 } from '../utils/swapListText';
 
+const TABS = [
+  { id: 'duplicates', label: 'Repetidas' },
+  { id: 'missing', label: 'Faltantes' },
+];
+
 export default function SwapView() {
-  const { collection, totalSwapAvailable, decrementSticker } = useGame();
+  const { collection, totalSwapAvailable, totalPlayers, decrementSticker } = useGame();
+  const [activeTab, setActiveTab] = useState('duplicates');
   const [feedback, setFeedback] = useState(null);
 
   const duplicates = useMemo(
@@ -25,10 +33,23 @@ export default function SwapView() {
     [collection]
   );
 
-  const listText = useMemo(
-    () => formatSwapListText(duplicates, totalSwapAvailable),
-    [duplicates, totalSwapAvailable]
+  const missing = useMemo(
+    () =>
+      playersData
+        .filter((sticker) => (collection[sticker.id]?.count ?? 0) < 1)
+        .sort((a, b) => a.country.localeCompare(b.country, 'es') || a.number - b.number),
+    [collection]
   );
+
+  const listText = useMemo(() => {
+    if (activeTab === 'missing') {
+      return formatMissingListText(missing, totalPlayers);
+    }
+    return formatSwapListText(duplicates, totalSwapAvailable);
+  }, [activeTab, missing, totalPlayers, duplicates, totalSwapAvailable]);
+
+  const hasItems = activeTab === 'missing' ? missing.length > 0 : duplicates.length > 0;
+  const shareTitle = activeTab === 'missing' ? 'Faltantes Panini 2026' : 'Repetidas Panini 2026';
 
   const showFeedback = useCallback((message) => {
     setFeedback(message);
@@ -50,7 +71,7 @@ export default function SwapView() {
   }, [listText, showFeedback]);
 
   const handleShare = useCallback(async () => {
-    const result = await shareSwapList(listText);
+    const result = await shareListText(listText, shareTitle);
     if (result === 'shared') {
       showFeedback('Lista compartida');
     } else if (result === 'cancelled') {
@@ -58,63 +79,58 @@ export default function SwapView() {
     } else {
       await handleCopy();
     }
-  }, [listText, showFeedback, handleCopy]);
+  }, [listText, shareTitle, showFeedback, handleCopy]);
 
   return (
     <div className="animate-fade-in space-y-6 pb-20">
       <div>
-        <h2 className="mb-1 text-2xl font-bold text-on-surface">Lista de cambios</h2>
+        <h2 className="mb-1 text-2xl font-bold text-on-surface">Listas de cambio</h2>
         <p className="text-on-surface-variant">
-          {duplicates.length > 0
-            ? `${totalSwapAvailable} repetidas disponibles para intercambiar.`
-            : 'Marca un cromo dos veces en el álbum para registrar una repetida.'}
+          Comparte lo que te sobra o lo que te falta para intercambiar con amigos.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1 rounded-xl border border-outline-variant/30 bg-surface-container-low p-4">
-          <span className="text-xs font-medium uppercase text-on-surface-variant">
-            Total repetidas
-          </span>
-          <span className="text-2xl font-bold text-secondary">{totalSwapAvailable}</span>
-        </div>
-        <div className="flex flex-col gap-1 rounded-xl border border-outline-variant/30 bg-surface-container-low p-4">
-          <span className="text-xs font-medium uppercase text-on-surface-variant">
-            Cromos distintos
-          </span>
-          <span className="text-2xl font-bold text-on-surface">{duplicates.length}</span>
-        </div>
+      <div className="flex rounded-xl border border-outline-variant/30 bg-surface-container-low p-1">
+        {TABS.map((tab) => {
+          const count = tab.id === 'missing' ? missing.length : totalSwapAvailable;
+          const active = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-bold transition-all ${
+                active
+                  ? 'bg-secondary text-black'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              {tab.label}
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] ${
+                  active ? 'bg-black/20' : 'bg-surface-container-highest'
+                }`}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      {duplicates.length > 0 && (
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-sm font-bold text-on-surface active:scale-[0.98]"
-          >
-            <CopyIcon />
-            Copiar lista
-          </button>
-          <button
-            type="button"
-            onClick={handleWhatsApp}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
-          >
-            <WhatsAppIcon />
-            WhatsApp
-          </button>
-          {typeof navigator !== 'undefined' && navigator.share && (
-            <button
-              type="button"
-              onClick={handleShare}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-secondary/40 bg-secondary/10 px-4 py-3 text-sm font-bold text-secondary active:scale-[0.98]"
-            >
-              <ShareIcon />
-              Más opciones
-            </button>
-          )}
-        </div>
+      {activeTab === 'duplicates' ? (
+        <DuplicatesPanel duplicates={duplicates} totalSwapAvailable={totalSwapAvailable} decrementSticker={decrementSticker} />
+      ) : (
+        <MissingPanel missing={missing} totalPlayers={totalPlayers} />
+      )}
+
+      {hasItems && (
+        <ShareToolbar
+          onCopy={handleCopy}
+          onWhatsApp={handleWhatsApp}
+          onShare={handleShare}
+          showNativeShare={typeof navigator !== 'undefined' && !!navigator.share}
+        />
       )}
 
       {feedback && (
@@ -123,54 +139,8 @@ export default function SwapView() {
         </p>
       )}
 
-      {duplicates.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-outline-variant/40 bg-surface-container px-6 py-12 text-center">
-          <p className="font-semibold text-on-surface">Sin repetidas</p>
-          <p className="mt-1 text-sm text-on-surface-variant">
-            Usa el botón + en el álbum para añadir copias extra.
-          </p>
-        </div>
-      ) : (
+      {hasItems && (
         <>
-          <div className="flex flex-col gap-3">
-            {duplicates.map((sticker, index) => {
-              const flagImg = getCountryImage(sticker.countryCode);
-              const isFeatured = index === 0;
-
-              return (
-                <div
-                  key={sticker.id}
-                  className={`flex items-center justify-between rounded-xl bg-surface-container-high p-4 ${
-                    isFeatured ? 'neon-border' : 'border border-outline-variant/20'
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg border border-outline-variant/20 bg-surface-container">
-                      <img src={flagImg} alt="" className="h-full w-full object-cover" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-lg font-semibold text-on-surface">{sticker.code}</span>
-                      <span className="text-xs text-on-surface-variant">{sticker.name}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-sm font-bold text-secondary glow-gold">
-                      +{sticker.available}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => decrementSticker(sticker)}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant/30 text-on-surface-variant active:scale-90"
-                      aria-label="Quitar repetida"
-                    >
-                      −
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
           <details className="rounded-xl border border-outline-variant/20 bg-surface-container-low">
             <summary className="cursor-pointer px-4 py-3 text-xs font-bold uppercase tracking-wide text-on-surface-variant">
               Vista previa del texto
@@ -179,20 +149,204 @@ export default function SwapView() {
               {listText}
             </pre>
           </details>
+
+          <div className="fixed bottom-24 left-0 right-0 z-40 mx-auto flex max-w-md justify-center px-[var(--spacing-container-margin)] pointer-events-none">
+            <button
+              type="button"
+              onClick={handleWhatsApp}
+              className="pointer-events-auto flex items-center gap-2 rounded-full bg-secondary px-6 py-3 text-sm font-bold text-black shadow-[0_0_20px_rgba(225,198,74,0.4)] active:scale-95"
+            >
+              <ShareIcon />
+              Compartir lista
+            </button>
+          </div>
         </>
       )}
+    </div>
+  );
+}
 
-      {duplicates.length > 0 && (
-        <div className="fixed bottom-24 left-0 right-0 z-40 mx-auto flex max-w-md justify-center px-[var(--spacing-container-margin)] pointer-events-none">
-          <button
-            type="button"
-            onClick={handleWhatsApp}
-            className="pointer-events-auto flex items-center gap-2 rounded-full bg-secondary px-6 py-3 text-sm font-bold text-black shadow-[0_0_20px_rgba(225,198,74,0.4)] active:scale-95"
-          >
-            <ShareIcon />
-            Compartir lista
-          </button>
+function DuplicatesPanel({ duplicates, totalSwapAvailable, decrementSticker }) {
+  if (!duplicates.length) {
+    return (
+      <EmptyState
+        title="Sin repetidas"
+        description="Marca un cromo dos veces en el álbum para registrar una repetida."
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        <StatCard label="Total repetidas" value={totalSwapAvailable} accent />
+        <StatCard label="Cromos distintos" value={duplicates.length} />
+      </div>
+      <div className="flex flex-col gap-3">
+        {duplicates.map((sticker, index) => (
+          <StickerRow
+            key={sticker.id}
+            sticker={sticker}
+            badge={`+${sticker.available}`}
+            featured={index === 0}
+            action={
+              <button
+                type="button"
+                onClick={() => decrementSticker(sticker)}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant/30 text-on-surface-variant active:scale-90"
+                aria-label="Quitar repetida"
+              >
+                −
+              </button>
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MissingPanel({ missing, totalPlayers }) {
+  const grouped = useMemo(
+    () =>
+      missing.reduce((acc, sticker) => {
+        if (!acc[sticker.country]) acc[sticker.country] = [];
+        acc[sticker.country].push(sticker);
+        return acc;
+      }, {}),
+    [missing]
+  );
+
+  if (!missing.length) {
+    return (
+      <EmptyState
+        title="¡Álbum completo!"
+        description="Tienes todos los cromos registrados. No te falta ninguno."
+      />
+    );
+  }
+
+  const collected = totalPlayers - missing.length;
+
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        <StatCard label="Faltantes" value={missing.length} accent />
+        <StatCard label="Pegados" value={collected} />
+      </div>
+      <div className="flex flex-col gap-3">
+        {Object.entries(grouped)
+          .sort(([a], [b]) => a.localeCompare(b, 'es'))
+          .map(([country, stickers]) => (
+            <details
+              key={country}
+              className="overflow-hidden rounded-xl border border-outline-variant/20 bg-surface-container-high"
+              open={Object.keys(grouped).length <= 4}
+            >
+              <summary className="flex cursor-pointer items-center justify-between px-4 py-3">
+                <span className="text-sm font-bold text-on-surface">{country}</span>
+                <span className="rounded-full bg-surface-container px-2.5 py-0.5 text-xs font-bold text-on-surface-variant">
+                  {stickers.length}
+                </span>
+              </summary>
+              <div className="flex flex-col gap-2 border-t border-outline-variant/10 px-2 pb-2">
+                {stickers.map((sticker) => (
+                  <StickerRow
+                    key={sticker.id}
+                    sticker={sticker}
+                    badge="Falta"
+                    badgeMuted
+                    compact
+                  />
+                ))}
+              </div>
+            </details>
+          ))}
+      </div>
+    </div>
+  );
+}
+
+function StickerRow({ sticker, badge, badgeMuted, featured, compact, action }) {
+  const flagImg = getCountryImage(sticker.countryCode);
+
+  return (
+    <div
+      className={`flex items-center justify-between rounded-xl bg-surface-container-high ${
+        compact ? 'p-3' : 'p-4'
+      } ${featured ? 'neon-border' : compact ? '' : 'border border-outline-variant/20'}`}
+    >
+      <div className="flex items-center gap-4">
+        <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg border border-outline-variant/20 bg-surface-container">
+          <img src={flagImg} alt="" className="h-full w-full object-cover" />
         </div>
+        <div className="flex flex-col">
+          <span className="text-lg font-semibold text-on-surface">{sticker.code}</span>
+          <span className="text-xs text-on-surface-variant">{sticker.name}</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <span
+          className={`rounded-full border px-3 py-1 text-sm font-bold ${
+            badgeMuted
+              ? 'border-outline-variant/30 bg-surface-container text-on-surface-variant'
+              : 'border-secondary/30 bg-secondary/10 text-secondary glow-gold'
+          }`}
+        >
+          {badge}
+        </span>
+        {action}
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ label, value, accent }) {
+  return (
+    <div className="flex flex-col gap-1 rounded-xl border border-outline-variant/30 bg-surface-container-low p-4">
+      <span className="text-xs font-medium uppercase text-on-surface-variant">{label}</span>
+      <span className={`text-2xl font-bold ${accent ? 'text-secondary' : 'text-on-surface'}`}>{value}</span>
+    </div>
+  );
+}
+
+function EmptyState({ title, description }) {
+  return (
+    <div className="rounded-xl border border-dashed border-outline-variant/40 bg-surface-container px-6 py-12 text-center">
+      <p className="font-semibold text-on-surface">{title}</p>
+      <p className="mt-1 text-sm text-on-surface-variant">{description}</p>
+    </div>
+  );
+}
+
+function ShareToolbar({ onCopy, onWhatsApp, onShare, showNativeShare }) {
+  return (
+    <div className="flex flex-col gap-2 sm:flex-row">
+      <button
+        type="button"
+        onClick={onCopy}
+        className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-outline-variant/30 bg-surface-container-high px-4 py-3 text-sm font-bold text-on-surface active:scale-[0.98]"
+      >
+        <CopyIcon />
+        Copiar lista
+      </button>
+      <button
+        type="button"
+        onClick={onWhatsApp}
+        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
+      >
+        <WhatsAppIcon />
+        WhatsApp
+      </button>
+      {showNativeShare && (
+        <button
+          type="button"
+          onClick={onShare}
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-secondary/40 bg-secondary/10 px-4 py-3 text-sm font-bold text-secondary active:scale-[0.98]"
+        >
+          <ShareIcon />
+          Más opciones
+        </button>
       )}
     </div>
   );
