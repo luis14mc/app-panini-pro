@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { playersData } from '../data/players';
+import {
+  resolveBracketTeams,
+  syncKnockoutOverrides,
+  overridesChanged,
+} from '../utils/bracketResolver';
 
 export const GameContext = createContext(null);
 
@@ -68,6 +73,15 @@ export const GameProvider = ({ children }) => {
       };
     });
   }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    setTeamOverrides((prev) => {
+      const { resolved } = resolveBracketTeams(matchResults, prev);
+      const synced = syncKnockoutOverrides(resolved, prev);
+      return overridesChanged(prev, synced) ? synced : prev;
+    });
+  }, [matchResults, isLoaded]);
 
   const updateMatchScore = useCallback((matchId, field, value) => {
     setMatchResults((prev) => ({

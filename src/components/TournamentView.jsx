@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { worldCupGroups } from '../data/albumGroups';
 import {
   TOURNAMENT_PHASES,
   getMatchesByPhase,
   getGroupMatches,
-  computeStandings,
   countTournamentProgress,
+  BRACKET_COLUMNS,
 } from '../data/tournament';
 import { getCountryImage } from '../data/countryImages';
+import {
+  resolveBracketTeams,
+  getEffectiveTeams,
+  getGroupQualificationStatus,
+  isGroupComplete,
+} from '../utils/bracketResolver';
 import MatchCard from './MatchCard';
 
 export default function TournamentView() {
-  const { matchResults, teamOverrides, updateMatchScore, updateMatchTeams } = useGame();
+  const { matchResults, teamOverrides, updateMatchScore } = useGame();
   const [phase, setPhase] = useState('groups');
   const [groupLetter, setGroupLetter] = useState('A');
+
+  const { resolved } = useMemo(
+    () => resolveBracketTeams(matchResults, teamOverrides),
+    [matchResults, teamOverrides]
+  );
 
   const { played, total } = countTournamentProgress(matchResults);
   const progressPercent = total ? Math.round((played / total) * 100) : 0;
@@ -22,42 +33,45 @@ export default function TournamentView() {
   const phaseMatches =
     phase === 'groups' ? getGroupMatches(groupLetter) : getMatchesByPhase(phase);
 
-  const standings = phase === 'groups' ? computeStandings(groupLetter, matchResults, teamOverrides) : [];
+  const standings =
+    phase === 'groups' ? getGroupQualificationStatus(groupLetter, matchResults, teamOverrides) : [];
+
+  const groupComplete = isGroupComplete(groupLetter, matchResults);
 
   return (
-    <div className="animate-fade-in space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold tracking-tight">
+    <div className="animate-fade-in space-y-4 pb-4">
+      <div className="rounded-xl border border-outline-variant/30 bg-gradient-to-b from-surface-container-low to-black p-4 text-center">
+        <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
           TORNEO <span className="text-secondary">2026</span>
         </h2>
-        <p className="mt-1 text-sm text-on-surface-variant">
-          Anota resultados fase a fase. Se guardan automáticamente.
+        <p className="mt-1 text-xs text-on-surface-variant">
+          Llaves oficiales · Los equipos se actualizan con tus resultados
         </p>
       </div>
 
-      <div className="rounded-xl border border-outline-variant/30 bg-surface-container-low p-4">
-        <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-          <span>Progreso del torneo</span>
+      <div className="rounded-xl border border-outline-variant/30 bg-surface-container-low p-3">
+        <div className="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+          <span>Progreso</span>
           <span className="text-secondary">{played}/{total}</span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-surface-container-highest">
           <div
-            className="h-full rounded-full bg-secondary transition-all duration-500 gold-glow"
+            className="h-full rounded-full bg-secondary transition-all duration-500"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       </div>
 
-      <nav className="no-scrollbar -mx-[var(--spacing-container-margin)] flex gap-6 overflow-x-auto border-b border-white/5 px-[var(--spacing-container-margin)] pb-1">
+      <nav className="no-scrollbar -mx-[var(--spacing-container-margin)] flex gap-1 overflow-x-auto px-[var(--spacing-container-margin)] pb-1">
         {TOURNAMENT_PHASES.map((p) => (
           <button
             key={p.id}
             type="button"
             onClick={() => setPhase(p.id)}
-            className={`shrink-0 pb-2 text-xs font-bold uppercase tracking-widest transition-all ${
+            className={`shrink-0 rounded-full px-3 py-2 text-[10px] font-bold uppercase tracking-wide transition-all ${
               phase === p.id
-                ? 'border-b-2 border-secondary text-secondary'
-                : 'text-on-surface-variant opacity-60 hover:opacity-100'
+                ? 'bg-secondary text-black'
+                : 'border border-outline-variant/30 bg-surface-container-high text-on-surface-variant'
             }`}
           >
             {p.label}
@@ -67,75 +81,124 @@ export default function TournamentView() {
 
       {phase === 'groups' && (
         <>
-          <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
-            {worldCupGroups.map((g) => (
-              <button
-                key={g.letter}
-                type="button"
-                onClick={() => setGroupLetter(g.letter)}
-                className={`shrink-0 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
-                  groupLetter === g.letter
-                    ? 'bg-secondary text-black'
-                    : 'border border-outline-variant/30 bg-surface-container-high text-on-surface-variant'
-                }`}
-              >
-                {g.letter}
-              </button>
-            ))}
+          <div className="no-scrollbar flex gap-1.5 overflow-x-auto pb-1">
+            {worldCupGroups.map((g) => {
+              const complete = isGroupComplete(g.letter, matchResults);
+              return (
+                <button
+                  key={g.letter}
+                  type="button"
+                  onClick={() => setGroupLetter(g.letter)}
+                  className={`relative shrink-0 rounded-lg px-3 py-2 text-sm font-bold transition-all ${
+                    groupLetter === g.letter
+                      ? 'bg-secondary text-black'
+                      : 'border border-outline-variant/30 bg-surface-container-high text-on-surface-variant'
+                  }`}
+                >
+                  {g.letter}
+                  {complete && (
+                    <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-secondary" />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <div className="overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-container">
-            <div className="border-b border-outline-variant/20 px-4 py-2 text-xs font-bold uppercase tracking-widest text-secondary">
-              Clasificación · Grupo {groupLetter}
+            <div className="flex items-center justify-between border-b border-outline-variant/20 px-3 py-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-secondary">
+                Grupo {groupLetter}
+              </span>
+              {groupComplete && (
+                <span className="text-[10px] font-bold text-secondary">Completo</span>
+              )}
             </div>
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="text-on-surface-variant">
-                  <th className="px-3 py-2">#</th>
-                  <th className="px-3 py-2">Equipo</th>
-                  <th className="px-3 py-2 text-center">PJ</th>
-                  <th className="px-3 py-2 text-center">DG</th>
-                  <th className="px-3 py-2 text-center font-bold">Pts</th>
-                </tr>
-              </thead>
-              <tbody>
-                {standings.map((row, i) => (
-                  <tr key={row.code} className="border-t border-outline-variant/10">
-                    <td className="px-3 py-2 text-on-surface-variant">{i + 1}</td>
-                    <td className="px-3 py-2">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={getCountryImage(row.code)}
-                          alt=""
-                          className="h-5 w-5 rounded-full object-cover"
-                        />
-                        <span className="font-bold uppercase">{row.code}</span>
-                      </div>
-                    </td>
-                    <td className="px-3 py-2 text-center">{row.played}</td>
-                    <td className="px-3 py-2 text-center">{row.gf - row.ga}</td>
-                    <td className="px-3 py-2 text-center font-bold text-secondary">{row.pts}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="grid grid-cols-[1rem_1.75rem_1fr_auto] gap-x-2 border-b border-outline-variant/20 px-3 py-1.5 text-[9px] font-bold uppercase text-on-surface-variant">
+              <span>#</span>
+              <span />
+              <span>Equipo</span>
+              <span className="text-right">PJ · DG · Pts</span>
+            </div>
+            <div className="divide-y divide-outline-variant/10">
+              {standings.map((row, i) => (
+                <div key={row.code} className="grid grid-cols-[1rem_1.75rem_1fr_auto] items-center gap-x-2 px-3 py-2.5">
+                  <span className="text-xs text-on-surface-variant">{i + 1}</span>
+                  <img
+                    src={getCountryImage(row.code)}
+                    alt=""
+                    className="h-7 w-7 rounded-full object-cover"
+                  />
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-bold uppercase">{row.code}</p>
+                    <p className="truncate text-[10px] text-on-surface-variant">{row.name}</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px]">
+                    <span className="font-bold text-secondary">{row.pts}</span>
+                    <span className="text-on-surface-variant">{row.gf - row.ga}</span>
+                    {row.qualBadge && (
+                      <span className="rounded bg-secondary/15 px-1 py-0.5 text-[8px] font-bold text-secondary">
+                        {row.qualBadge}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </>
       )}
 
-      <div className="space-y-4">
-        {phaseMatches.map((match) => (
-          <MatchCard
-            key={match.id}
-            match={match}
-            result={matchResults[match.id]}
-            teamOverrides={teamOverrides[match.id]}
-            editableTeams={phase !== 'groups'}
-            onScoreChange={updateMatchScore}
-            onTeamChange={updateMatchTeams}
-          />
-        ))}
-      </div>
+      {phase === 'bracket' && (
+        <div className="space-y-3">
+          <p className="text-center text-xs text-on-surface-variant">
+            Desliza para ver el cuadro completo →
+          </p>
+          <div className="no-scrollbar -mx-[var(--spacing-container-margin)] flex gap-3 overflow-x-auto px-[var(--spacing-container-margin)] pb-2">
+            {BRACKET_COLUMNS.map((col) => {
+              const colMatches = getMatchesByPhase(col.phase);
+              return (
+                <div key={col.phase} className="w-[148px] shrink-0 space-y-2">
+                  <p className="sticky top-0 text-center text-[10px] font-bold uppercase tracking-widest text-secondary">
+                    {col.label}
+                  </p>
+                  {colMatches.map((match) => {
+                    const teams = getEffectiveTeams(match, resolved);
+                    return (
+                      <MatchCard
+                        key={match.id}
+                        match={match}
+                        result={matchResults[match.id]}
+                        effectiveHome={teams.home}
+                        effectiveAway={teams.away}
+                        onScoreChange={updateMatchScore}
+                        compact
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {phase !== 'bracket' && (
+        <div className="space-y-3">
+          {phaseMatches.map((match) => {
+            const teams = getEffectiveTeams(match, resolved);
+            return (
+              <MatchCard
+                key={match.id}
+                match={match}
+                result={matchResults[match.id]}
+                effectiveHome={teams.home}
+                effectiveAway={teams.away}
+                onScoreChange={updateMatchScore}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

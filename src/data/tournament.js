@@ -1,14 +1,16 @@
 import { worldCupGroups } from './albumGroups';
+import { R32_SLOTS, FEED_BRACKET } from './knockoutBracket';
 
 export const allTeams = worldCupGroups.flatMap((g) => g.teams);
 export const teamByCode = Object.fromEntries(allTeams.map((t) => [t.code, t]));
 
 export const TOURNAMENT_PHASES = [
   { id: 'groups', label: 'Grupos' },
-  { id: 'r32', label: 'Dieciseisavos' },
+  { id: 'bracket', label: 'Llaves' },
+  { id: 'r32', label: '32avos' },
   { id: 'r16', label: 'Octavos' },
   { id: 'qf', label: 'Cuartos' },
-  { id: 'sf', label: 'Semifinales' },
+  { id: 'sf', label: 'Semis' },
   { id: 'final', label: 'Final' },
 ];
 
@@ -33,22 +35,41 @@ export const groupMatches = worldCupGroups.flatMap((group) =>
   }))
 );
 
-const KNOCKOUT_COUNTS = { r32: 16, r16: 8, qf: 4, sf: 2, final: 1 };
-
-export const knockoutMatches = Object.entries(KNOCKOUT_COUNTS).flatMap(([phase, count]) =>
-  Array.from({ length: count }, (_, index) => ({
-    id: `${phase}-${index}`,
+function buildFeedMatches(phase, entries) {
+  return entries.map((entry) => ({
+    id: entry.id,
     phase,
-    label: TOURNAMENT_PHASES.find((p) => p.id === phase)?.label ?? phase,
+    fifa: entry.fifa,
+    label: `Partido ${entry.fifa}`,
+    short: entry.short,
     home: null,
     away: null,
-  }))
-);
+    feedHome: entry.home,
+    feedAway: entry.away,
+  }));
+}
+
+export const knockoutMatches = [
+  ...R32_SLOTS.map((s) => ({
+    id: s.id,
+    phase: 'r32',
+    fifa: s.fifa,
+    label: `Partido ${s.fifa}`,
+    short: s.short,
+    home: null,
+    away: null,
+  })),
+  ...buildFeedMatches('r16', FEED_BRACKET.r16),
+  ...buildFeedMatches('qf', FEED_BRACKET.qf),
+  ...buildFeedMatches('sf', FEED_BRACKET.sf),
+  ...buildFeedMatches('final', FEED_BRACKET.final),
+];
 
 export const allMatches = [...groupMatches, ...knockoutMatches];
 
 export function getMatchesByPhase(phase) {
   if (phase === 'groups') return groupMatches;
+  if (phase === 'bracket') return knockoutMatches;
   return knockoutMatches.filter((m) => m.phase === phase);
 }
 
@@ -118,3 +139,11 @@ export function countTournamentProgress(matchResults) {
   const played = allMatches.filter((m) => isMatchPlayed(matchResults[m.id])).length;
   return { played, total: allMatches.length };
 }
+
+export const BRACKET_COLUMNS = [
+  { phase: 'r32', label: '32avos' },
+  { phase: 'r16', label: 'Octavos' },
+  { phase: 'qf', label: 'Cuartos' },
+  { phase: 'sf', label: 'Semis' },
+  { phase: 'final', label: 'Final' },
+];
